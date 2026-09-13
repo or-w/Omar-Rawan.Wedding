@@ -1210,18 +1210,22 @@
 
     envelope.classList.add("opened");
 
+    // Start playback immediately, inside the click handler itself.
+    // Mobile browsers only allow audio autoplay when play() is called
+    // synchronously in direct response to a user gesture — calling it
+    // later inside a setTimeout breaks that chain and gets blocked.
+    if (music) {
+      music.volume = 0.45;
+      music.play()
+        .then(function(){ musicButton.classList.add("playing", "visible"); })
+        .catch(function(){ musicButton.classList.add("visible"); });
+    }
+
     setTimeout(function(){
       site.classList.add("open");
       site.setAttribute("aria-hidden", "false");
 
       opening.classList.add("hide");
-
-      if (music) {
-        music.volume = 0.45;
-        music.play()
-          .then(function(){ musicButton.classList.add("playing", "visible"); })
-          .catch(function(){ musicButton.classList.add("visible"); });
-      }
     }, 1250);
 
     setTimeout(function(){
